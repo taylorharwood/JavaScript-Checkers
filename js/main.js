@@ -15,6 +15,10 @@ var board = [
   [null, null, null, null, null, null, null, null],
 ];
 
+////////////////////////////////////////////////////////////////////////////////
+//Piece Object and Methods//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
 // For this project, I'm going to attempt to take an OOP approach.
 // All game pieces will be objects that have at least three properties:
 // team and coordinates and selected (bool).
@@ -24,6 +28,66 @@ function Piece(team, coordinates) {
   this.coordinates = coordinates;
   this.selected = false; //will change to true upon click.
 }
+
+// will determine the set of possible legal moves based off of a player's
+// selected piece...
+
+Piece.prototype.getPossibleMoves = function() {
+  var possibleMoves = [];
+  if (team === "B") { //check for possible black moves
+    possibleMoves.push([this.coordinates[0] + 1, this.coordinates[1] - 1]);
+    possibleMoves.push([this.coordinates[0] + 1, this.coordinates[1] + 1]);
+
+    //   for(var i = 0; i < possibleMoves.length; i++) {
+    //     if(board[possibleMoves[i]] !== null) {
+    //       checkForOpponent(possibleMoves[i]);
+    //     } else {
+    //       possibleMoves.splice(i, 1);
+    //     }
+    //   }
+
+  }
+  // else { //check for possible white moves
+
+  // }
+
+  return possibleMoves;
+}
+
+
+Piece.prototype.checkForOpponent = function() {
+  // var potentialOpponent = board[possibleMove[0]][possibleMove[1]];
+  // if (potentialOpponent.team !== currentPlayer) {
+    //remove potentialOpponent, update score, skip the selected
+    //piece to appropriate square.
+}
+
+// On click, this function resets the selected piece to the most recently
+// clicked.
+Piece.prototype.setSelectedPiece = function(clicked) {
+  if (this.selected !== true) {
+    for (var i = 0; i < board.length; i++) {
+      for (var j = 0; j < board[i].length; j++) {
+        if (board[i][j] !== null) {
+          board[i][j].selected = false;
+        }
+      }
+    }
+
+    if (clicked !== null) {
+      this.selected = true;
+      currentPlayer = this.team;
+    }
+  } else {
+    this.selected = false;
+  }
+  return clicked;
+};
+
+
+////////////////////////////////////////////////////////////////////////////////
+//Piece Object and Methods//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
 // setPiece function adds a piece object depending on current player.
 // May or may not be used in the future.
@@ -146,32 +210,10 @@ $(".board").on("click", ".square", function() {
 var getClickedPiece = function(clicked) {
   var coordinates = clicked.attr('id').split('-');
   var selectedPiece = board[coordinates[0]][coordinates[1]];
-  setSelectedPiece(selectedPiece);
+  // setSelectedPiece(selectedPiece);
+  selectedPiece.setSelectedPiece();
   console.log(selectedPiece);
   return selectedPiece;
-};
-
-
-// On click, this function resets the selected piece to the most recently
-// clicked.
-var setSelectedPiece = function(clicked) {
-  if (clicked !== getSelectedPiece) {
-    for (var i = 0; i < board.length; i++) {
-      for (var j = 0; j < board[i].length; j++) {
-        if (board[i][j] !== null) {
-          board[i][j].selected = false;
-        }
-      }
-    }
-
-    if (clicked !== null) {
-      clicked.selected = true;
-      currentPlayer = clicked.team;
-    }
-  } else {
-    clicked.selected = false;
-  }
-  return clicked;
 };
 
 var getSelectedPiece = function() {
@@ -184,38 +226,4 @@ var getSelectedPiece = function() {
   }
 
   return false;
-}
-
-// will determine the set of possible legal moves based off of a player's
-// selected piece...
-var getPossibleMoves = function() {
-  var possibleMoves = [];
-  if (currentPlayer === "B") { //check for possible black moves
-    var selectedCoordinates = getSelectedPiece().coordinates;
-    console.log(selectedCoordinates);
-    possibleMoves.push([selectedCoordinates[0] + 1, selectedCoordinates[1] - 1]);
-    possibleMoves.push([selectedCoordinates[0] + 1, selectedCoordinates[1] + 1]);
-
-    //   for(var i = 0; i < possibleMoves.length; i++) {
-    //     if(board[possibleMoves[i]] !== null) {
-    //       checkForOpponent(possibleMoves[i]);
-    //     } else {
-    //       possibleMoves.splice(i, 1);
-    //     }
-    //   }
-
-  }
-  // else { //check for possible white moves
-
-  // }
-
-  return possibleMoves;
-}
-
-var checkForOpponent = function(possibleMove) {
-  var potentialOpponent = board[possibleMove[0]][possibleMove[1]];
-  if (potentialOpponent.team !== currentPlayer) {
-    //remove potentialOpponent, update score, skip the selected
-    //piece to appropriate square.
-  }
 }
