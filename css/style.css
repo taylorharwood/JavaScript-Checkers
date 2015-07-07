@@ -3,9 +3,9 @@
     margin: 0;
   }
 
-  h1 {
-    text-align: center;
-  }
+h1 {
+  text-align: center;
+}
 
 .board {
   margin: 0 auto;
@@ -28,5 +28,13 @@
 .board .block:nth-child(2n+1) {
   background-color: #ddd;
   margin-right: 1px;
+}
+
+#piece {
+  width: 50%;
+  height: 50%;
+  margin: 25% auto;
+  border-radius: 50%;
+  background-color: #555;
 }
 
