@@ -4,7 +4,7 @@
 
 
 **MVP**:
-- As a user, I want to be able to move my pieces on the board so I can try and win the game.
+- [ ] As a user, I want to be able to move my pieces on the board so I can try and win the game.
 - As a user, I want to be notified as to whether or not my desired move is legal or not so I can make a different move if needed.
 - As a user, I want to be able to play against another human so that the game is at least playable.
 - As a user, I want to be able to pick my color at the start of the game.
