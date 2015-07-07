@@ -1,6 +1,32 @@
-
-  body{
+  body {
     padding: 0;
     margin: 0;
   }
+
+  h1 {
+    text-align: center;
+  }
+
+.board {
+  margin: 0 auto;
+  width: 608px;
+  height: 608px;
+}
+
+.board .block {
+  float: left;
+  width: 75px;
+  height: 75px;
+  margin-bottom: 1px;
+}
+
+.board .block:nth-child(2n+0) {
+  background-color: #ccc;
+  margin-right: 1px;
+}
+
+.board .block:nth-child(2n+1) {
+  background-color: #ddd;
+  margin-right: 1px;
+}
 
