@@ -14,7 +14,7 @@ var board = [[null, null, null, null, null, null, null, null],
 
 // For this project, I'm going to attempt to take an OOP approach.
 // All game pieces will be objects that have two properties:
-// team and coordintes. Also to be added (maybe) are methods.
+// team and coordinates. Also to be added (maybe) are methods.
 function Piece(team, coordinates) {
   this.team = team;
   this.coordinates = coordinates;
@@ -89,7 +89,7 @@ var printBoard = function() {
       if (board[i][j] === null) {
         output += "_ ";
       } else {
-        output += board[i][j] + " ";
+        output += board[i][j].team + " ";
       }
     }
 
@@ -103,8 +103,13 @@ var printBoard = function() {
 // NO MIXING GAME MODEL AND DOM STUFF AT ALL.
 
 // Event delegation/bubbling for all blocks inside the main board div.
-$(".board").on("click", ".block", function() {
-  getSelectedPiece($(this));
+$(".board").on("click", ".square", function() {
+  var targeted = getSelectedPiece($(this));
+  if (targeted) {
+    getPossibleMoves();
+  } else {
+    console.log("Null square selected")
+  }
 });
 
 // registers where the player clicked and returns the Piece object contained

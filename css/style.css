@@ -13,27 +13,27 @@ h1 {
   height: 488px;
 }
 
-.board .block {
+.board .square {
   float: left;
   width: 60px;
   height: 60px;
   margin-bottom: 1px;
 }
 
-.board .block:nth-child(2n+0) {
+.board .square:nth-child(2n+0) {
   background-color: #ccc;
   margin-right: 1px;
 }
 
-.board .block:nth-child(2n+1) {
+.board .square:nth-child(2n+1) {
   background-color: #ddd;
   margin-right: 1px;
 }
 
 #piece {
-  width: 50%;
-  height: 50%;
-  margin: 25% auto;
+  width: 60%;
+  height: 60%;
+  margin: 20% auto;
   border-radius: 50%;
   background-color: #555;
 }
