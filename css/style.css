@@ -8,15 +8,15 @@ h1 {
 }
 
 .board {
-  margin: 0 auto;
-  width: 608px;
-  height: 608px;
+  margin: 50px auto;
+  width: 488px;
+  height: 488px;
 }
 
 .board .block {
   float: left;
-  width: 75px;
-  height: 75px;
+  width: 60px;
+  height: 60px;
   margin-bottom: 1px;
 }
 

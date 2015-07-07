@@ -1,5 +1,7 @@
 console.log('activate framework!');
 
+// For data modeling, I'll be using a nested array data structure.
+// At game start, null values are inserted for all coordinates.
 var board = [[null, null, null, null, null, null, null, null],
              [null, null, null, null, null, null, null, null],
              [null, null, null, null, null, null, null, null],
@@ -10,11 +12,16 @@ var board = [[null, null, null, null, null, null, null, null],
              [null, null, null, null, null, null, null, null],
             ];
 
+// For this project, I'm going to attempt to take an OOP approach.
+// All game pieces will be objects that have two properties:
+// team and coordintes. Also to be added (maybe) are methods.
 function Piece(team, coordinates) {
   this.team = team;
   this.coordinates = coordinates;
 }
 
+// setPiece function adds a piece object depending on current player.
+// May or may not be used in the future.
 var setPiece = function(row, col, player) {
   board[row-1][col-1] = player;
   return board;
@@ -61,6 +68,7 @@ var setBoard = function() {
   return board;
 }
 
+// Clears the board...
 var clearBoard = function() {
   for(var i = 0; i < board.length; i++) {
     for(var j = 0; j < board[i].length; j++) {
@@ -71,6 +79,8 @@ var clearBoard = function() {
   return board;
 }
 
+// Prints the board in a more readable format in the console. Needs to be
+// worked on quite a bit...
 var printBoard = function() {
   for(var i =  0; i < board.length; i++) {
     var output = "";
@@ -92,10 +102,13 @@ var printBoard = function() {
 // PUT ALL OF THE DOM STUFF IN THE $(function() {}) jQuery function ready code
 // NO MIXING GAME MODEL AND DOM STUFF AT ALL.
 
+// Event delegation/bubbling for all blocks inside the main board div.
 $(".board").on("click", ".block", function() {
   getSelectedPiece($(this));
 });
 
+// registers where the player clicked and returns the Piece object contained
+// within the clicked div.
 var getSelectedPiece = function(clicked) {
   var clickedSquare = clicked.attr('id');
   var coordinates = clickedSquare.split(',');
@@ -105,12 +118,14 @@ var getSelectedPiece = function(clicked) {
   return selectedPiece;
 }
 
+// will determine the set of possible legal moves based off of a player's
+// selected piece...
 var getPossibleMoves = function() {
   var possibleMoves = [];
   var selectedPiece = getSelectedPiece();
   var coordinates = selectedPiece.coordinates;
   if (selectedPiece.team === "W") {
-    possibleMoves.push(selectedPiece.coord)
+    possibleMoves.push(coordinates)
   } else {
 
   }
