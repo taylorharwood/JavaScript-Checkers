@@ -20,19 +20,24 @@ var board = [
 function Piece(team, coordinates) {
   this.team = team;
   this.coordinates = coordinates;
+  this.king = false; //no one is a king at start, when true, more possible moves.
   this.selected = false; //will change to true upon click.
 }
 
 //Figures out legal moves for currently selected player.
 Piece.prototype.getPossibleMoves = function() {
   var possibleMoves = [];
-  if (this.team === "B") { //check for possible black moves
-    possibleMoves.push([this.coordinates[0] + 1, this.coordinates[1] - 1]);
-    possibleMoves.push([this.coordinates[0] + 1, this.coordinates[1] + 1]);
+  if (this.king === false) {
+    if (this.team === "B") { //check for possible black moves
+      possibleMoves.push([this.coordinates[0] + 1, this.coordinates[1] - 1]);
+      possibleMoves.push([this.coordinates[0] + 1, this.coordinates[1] + 1]);
 
-  } else { //check for possible white moves
-    possibleMoves.push([this.coordinates[0] - 1, this.coordinates[1] - 1]);
-    possibleMoves.push([this.coordinates[0] - 1, this.coordinates[1] + 1]);
+    } else { //check for possible white moves
+      possibleMoves.push([this.coordinates[0] - 1, this.coordinates[1] - 1]);
+      possibleMoves.push([this.coordinates[0] - 1, this.coordinates[1] + 1]);
+    }
+  } else {
+    //allow for moving backwards in both directions!
   }
 
   // if (possibleMoves[0] !== null && possibleMoves[0].get)
