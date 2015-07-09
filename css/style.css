@@ -1,11 +1,30 @@
 body {
+  background-color: rgba(62,96,111,1);
   font-family: Helvetica, sans-serif;
   padding: 0;
   margin: 0;
 }
 
 h1 {
+  margin-top: 10px;
+  color: #eee;
   text-align: center;
+}
+
+#current-player {
+  text-align: center;
+  margin-bottom: 1px;
+  height: 40px;
+  border-radius: 5px;
+  width: 100%;
+  background-color: #aaa;
+}
+
+#current-player h3 {
+  color: white;
+  padding-top: 2%;
+  font-weight: 300;
+  font-size: .95em;
 }
 
 .board {
@@ -52,27 +71,34 @@ h1 {
 }
 
 .options {
+  width: 488px;
   clear: both;
   margin: 0 auto;
 }
 
 .option-buttons {
   text-align: center;
-  width: 488px;
+  width: 243.5px;
+  float: left;
   height: 40px;
   margin: 0 auto;
   border-radius: 5px;
   background-color: #aaa;
-  border: 1px solid #eee;
 }
 
 .option-buttons h2 {
   font-weight: 300;
   font-size: .95em;
   color: white;
-  vertical-align: middle;
 }
 
+#set-board {
+  margin-right: .5px;
+}
+
+#clear-board {
+  margin-left: .5px;
+}
 .selected {
   -webkit-box-shadow: 0px 0px 10px 3px rgba(62,96,111,1);
   -moz-box-shadow: 0px 0px 10px 3px rgba(62,96,111,1);

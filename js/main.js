@@ -1,6 +1,6 @@
 var currentPlayer = 'B'; //will change each turn.
 
-// Nested area used as the data model.
+// Nested araay used as the data model.
 var board = [
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
@@ -16,9 +16,7 @@ var board = [
 //Piece Object and Methods//////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-// For this project, I'm going to attempt to take an OOP approach.
-// All game checker pieces will be objects.
-
+//Object Constructor Function for Piece object.
 function Piece(team, coordinates) {
   this.team = team;
   this.coordinates = coordinates;
@@ -37,18 +35,23 @@ Piece.prototype.getPossibleMoves = function() {
     possibleMoves.push([this.coordinates[0] - 1, this.coordinates[1] + 1]);
   }
 
+  // if (possibleMoves[0] !== null && possibleMoves[0].get)
+  console.log(board[possibleMoves[0][0]][possibleMoves[0][1]]); //grabs the
+  //element inside the possible moves coordinates
   return possibleMoves;
 };
 
 //gets the coordinates for a piece and converts it to a string with the div IDname.
-//Used for DOM Manipulation.
+//Used for DOM Manipulation using jQuery.
 Piece.prototype.getDivID = function() {
   return '#' + this.coordinates.join('-');
 };
 
-Piece.prototype.attackOpponent(opponentLocation) = function() {
+//Will take the opponent and remove it from Visual Board and
+//2D Array.
+// Piece.prototype.attackOpponent(opponentLocation) = function() {
 
-};
+// };
 
 // Sets the piece object to selected as true and sets selected as false
 // for all other pieces.
@@ -65,6 +68,8 @@ Piece.prototype.setSelectedPiece = function() {
   this.selected = true;
 };
 
+//Moves selected piece to the desired coordinates, assuming they match one of
+//the legal moves produced by getPossibleMoves().
 Piece.prototype.moveSelectedPiece = function(desiredCoordinates) {
   var pieceToMove = getSelectedPiece(); //get currently selected piece
   // console.log(pieceToMove);
@@ -78,13 +83,14 @@ Piece.prototype.moveSelectedPiece = function(desiredCoordinates) {
     acceptableMove = possibleMoves[0];
   } else if (desiredCoordinates[0] == pieceToMove.getPossibleMoves()[1][0] && desiredCoordinates[1] == pieceToMove.getPossibleMoves()[1][1]) {
     acceptableMove = possibleMoves[1];
-  } else if (typeof desiredCoordinates[0] === 'undefined' || typeof desiredCoordinates[1] === 'undefined') {
-    // getSelectedPiece().attackOpponent();
+  } else if (typeof desiredCoordinates[0] === 'object' || typeof desiredCoordinates[1] === 'object') {
+    //then call attackOpponent method that will move to appropriate square and update Vis board.
   } else {
     alert("You can't move there.");
     return;
   }
-
+//////////////////SPLIT UP moveSelectedPiece into getDesiredMove and moveSelectedPiece methods.
+//////////////////This way, you can return acceptable move and act upon it in moveSelected Piece, below.
 
   var oldCoordinates = getSelectedPiece().getDivID();
   pieceToMove.coordinates = acceptableMove; // change the selected piece coordinates to desired location.
@@ -99,6 +105,8 @@ Piece.prototype.moveSelectedPiece = function(desiredCoordinates) {
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
+//Takes in the coordinates of the old piece and updates the visual board
+//with the moved piece in it's new location.
 var updateVisualBoard = function(oldCoordinates) {
   var classType;
   if (currentPlayer === 'B') {
@@ -183,8 +191,7 @@ var setVisualBoard = function() {
   }
 };
 
-// Prints the board in a more readable format in the console. Needs to be
-// worked on quite a bit...
+// Prints the board in a more readable format in the console.
 var printBoard = function() {
   for (var i = 0; i < board.length; i++) {
     var output = i + ":  ";
@@ -203,7 +210,7 @@ var printBoard = function() {
   return 1;
 };
 
-// Clears the board...
+// Clears the board array...
 var clearBoard = function() {
   for (var i = 0; i < board.length; i++) {
     for (var j = 0; j < board[i].length; j++) {
@@ -214,6 +221,7 @@ var clearBoard = function() {
   return board;
 };
 
+// Clears the board on browser screen...
 var clearVisualBoard = function() {
   for (var i = 0; i < board.length; i++) {
     for (var j = 0; j < board[i].length; j++) {
@@ -225,13 +233,9 @@ var clearVisualBoard = function() {
 
 ////////// DOM INTERACTION ///////
 
-// PUT ALL OF THE DOM STUFF IN THE $(function() {}) jQuery function ready code
-// NO MIXING GAME MODEL AND DOM STUFF AT ALL.f
-
 // Event delegation/bubbling for all blocks inside the main board div.
 $(".board").on("click", ".square", function() {
   var clickedSquare = $(this); //this square was clicked
-  console.log(clickedSquare);
   var clickedPiece = getClicked(clickedSquare); //the piece inside the square
   if (getSelectedPiece() === false && clickedPiece.team === currentPlayer) { //set as selected
     clickedPiece.setSelectedPiece(); //method that sets piece selected as true //gets coordinates
@@ -242,10 +246,7 @@ $(".board").on("click", ".square", function() {
     clickedPiece.setSelectedPiece();
   } else { //try to move
     if (getSelectedPiece().team === currentPlayer) {
-      console.log("in here")
-      // console.log(clickedSquare);
       var desiredMove = getClicked(clickedSquare);
-      // / console.log(desiredMove);
       getSelectedPiece().moveSelectedPiece(desiredMove);
     } else {
       alert("It's not your turn!");
@@ -288,6 +289,7 @@ var changePlayer = function() {
   } else {
     currentPlayer = 'B';
   }
+  $('#current-player h3').html("Current Player: " + currentPlayer);
 };
 
 var setVisualSelected = function() {
