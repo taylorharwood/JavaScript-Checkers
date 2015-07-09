@@ -17,9 +17,10 @@ var board = [
 ////////////////////////////////////////////////////////////////////////////////
 
 //Object Constructor Function for Piece object.
-function Piece(team, coordinates) {
+function Piece(team, row, col) {
   this.team = team;
-  this.coordinates = coordinates;
+  this.row = row;
+  this.column = column;
   this.king = false; //no one is a king at start, when true, more possible moves.
   this.selected = false; //will change to true upon click.
 }
@@ -29,12 +30,12 @@ Piece.prototype.getPossibleMoves = function() {
   var possibleMoves = [];
   if (this.king === false) {
     if (this.team === "B") { //check for possible black moves
-      possibleMoves.push([this.coordinates[0] + 1, this.coordinates[1] - 1]);
-      possibleMoves.push([this.coordinates[0] + 1, this.coordinates[1] + 1]);
+      possibleMoves.push([this.row + 1, col - 1]);
+      possibleMoves.push([this.row + 1, col + 1]);
 
     } else { //check for possible white moves
-      possibleMoves.push([this.coordinates[0] - 1, this.coordinates[1] - 1]);
-      possibleMoves.push([this.coordinates[0] - 1, this.coordinates[1] + 1]);
+      possibleMoves.push([this.row - 1, this.col - 1]);
+      possibleMoves.push([this.row - 1, this.col + 1]);
     }
   } else {
     //allow for moving backwards in both directions!
@@ -68,7 +69,7 @@ Piece.prototype.getPossibleMoves = function() {
 //gets the coordinates for a piece and converts it to a string with the div IDname.
 //Used for DOM Manipulation using jQuery.
 Piece.prototype.getDivID = function() {
-  return '#' + this.coordinates.join('-');
+  return '#' + this.row + "-" + this.col;
 };
 
 //Will take the opponent and remove it from Visual Board and
@@ -153,11 +154,11 @@ var setBlack = function() {
   for (var i = 0; i < 3; i++) {
     if (i % 2 === 0) {
       for (var j = 0; j < board[i].length; j += 2) {
-        board[i][j] = new Piece("B", [i, j]);
+        board[i][j] = new Piece("B", i, j);
       }
     } else {
       for (var j = 1; j < board[i].length; j += 2) {
-        board[i][j] = new Piece("B", [i, j]);
+        board[i][j] = new Piece("B", i, j);
       }
     }
   }
@@ -170,11 +171,11 @@ var setWhite = function() {
   for (var i = 5; i <= 7; i++) {
     if (i % 2 === 0) {
       for (var j = 0; j < board[i].length; j += 2) {
-        board[i][j] = new Piece("W", [i, j]);
+        board[i][j] = new Piece("W", i, j);
       }
     } else {
       for (var j = 1; j < board[i].length; j += 2) {
-        board[i][j] = new Piece("W", [i, j]);
+        board[i][j] = new Piece("W", i, j);
       }
     }
   }
