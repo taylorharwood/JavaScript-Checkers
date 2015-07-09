@@ -1,9 +1,6 @@
-console.log('activate framework!');
-var currentPlayer = 'black'; //will change each turn and help to
-// determine selectable players.
+var currentPlayer = 'B'; //will change each turn.
 
-// For data modeling, I'll be using a nested array data structure.
-// At game start, null values are inserted for all coordinates.
+// Nested area used as the data model.
 var board = [
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
@@ -20,31 +17,20 @@ var board = [
 ////////////////////////////////////////////////////////////////////////////////
 
 // For this project, I'm going to attempt to take an OOP approach.
-// All game pieces will be objects that have at least three properties:
-// team and coordinates and selected (bool).
-// Also to be added (maybe) are methods.
+// All game checker pieces will be objects.
+
 function Piece(team, coordinates) {
   this.team = team;
   this.coordinates = coordinates;
   this.selected = false; //will change to true upon click.
 }
 
-// will determine the set of possible legal moves based off of a player's
-// selected piece...
-
+//Figures out legal moves for currently selected player.
 Piece.prototype.getPossibleMoves = function() {
   var possibleMoves = [];
   if (this.team === "B") { //check for possible black moves
     possibleMoves.push([this.coordinates[0] + 1, this.coordinates[1] - 1]);
     possibleMoves.push([this.coordinates[0] + 1, this.coordinates[1] + 1]);
-
-    //   for(var i = 0; i < possibleMoves.length; i++) {
-    //     if(board[possibleMoves[i]] !== null) {
-    //       checkForOpponent(possibleMoves[i]);
-    //     } else {
-    //       possibleMoves.splice(i, 1);
-    //     }
-    //   }
 
   } else { //check for possible white moves
     possibleMoves.push([this.coordinates[0] - 1, this.coordinates[1] - 1]);
@@ -52,19 +38,23 @@ Piece.prototype.getPossibleMoves = function() {
   }
 
   return possibleMoves;
-}
+};
 
+//gets the coordinates for a piece and converts it to a string with the div IDname.
+Piece.prototype.getDivID = function() {
+  return '#' + this.coordinates.join('-');
+};
 
 Piece.prototype.checkForOpponent = function() {
   // var potentialOpponent = board[possibleMove[0]][possibleMove[1]];
   // if (potentialOpponent.team !== currentPlayer) {
   //remove potentialOpponent, update score, skip the selected
   //piece to appropriate square.
-}
+};
 
-// On click, this function resets the selected piece to the most recently
-// clicked.
-Piece.prototype.setSelectedPiece = function(clicked) {
+// Sets the piece object to selected as true and sets seleceted as false
+// for all other pieces.
+Piece.prototype.setSelectedPiece = function() {
   if (this.selected !== true) {
     for (var i = 0; i < board.length; i++) {
       for (var j = 0; j < board[i].length; j++) {
@@ -73,61 +63,54 @@ Piece.prototype.setSelectedPiece = function(clicked) {
         }
       }
     }
-
-    if (clicked !== null) {
-      this.selected = true;
-      currentPlayer = this.team;
-    }
-  } else {
-    this.selected = false;
   }
-  return clicked;
+  this.selected = true;
 };
 
-Piece.prototype.moveSelectedPiece = function(coordinates) {
+Piece.prototype.moveSelectedPiece = function(desiredCoordinates) {
   pieceToMove = getSelectedPiece(); //get currently selected piece
-  console.log(pieceToMove);
+  // console.log(pieceToMove);
   pieceToMoveCoordinates = pieceToMove.coordinates;
-  console.log(pieceToMoveCoordinates);
-  console.log(pieceToMove.getPossibleMoves()[0]);
-  console.log(coordinates);
-  for (var i = 0; i < pieceToMove.getPossibleMoves().length; i++) {
-    if (coordinates == pieceToMove.getPossibleMoves()[i]) {
-      console.log("inside");
-      pieceToMove.coordinates = coordinates; // change the selected piece coordinates
-      board[coordinates[0]][coordinates[1]] = pieceToMove; //move the object to new coordinates.
-      getSelectedPiece().selected = false;
-      board[pieceToMoveCoordinates] = null;
-    }
+  // console.log(pieceToMoveCoordinates + " piece to move coords");
+  // console.log(pieceToMove.getPossibleMoves()[0] + " & " + pieceToMove.getPossibleMoves()[1] + " possible moves");
+  // console.log(coordinates + " desire location coordinates");
+  if (desiredCoordinates[0] == pieceToMove.getPossibleMoves()[0][0] && desiredCoordinates[1] == pieceToMove.getPossibleMoves()[0][1]) {
+    acceptableMove = pieceToMove.getPossibleMoves()[0];
+  } else if (desiredCoordinates[0] == pieceToMove.getPossibleMoves()[1][0] && desiredCoordinates[1] == pieceToMove.getPossibleMoves()[1][1]) {
+    acceptableMove = pieceToMove.getPossibleMoves()[1];
+  } else {
+    alert("You can't move there.");
+    return;
   }
 
-  //updateVisualBoard() will update the visual board according to board 2D array.
-}
+  var oldCoordinates = getSelectedPiece().getDivID();
+  pieceToMove.coordinates = acceptableMove; // change the selected piece coordinates to desired location.
+  board[acceptableMove[0]][acceptableMove[1]] = pieceToMove; //move the object to new coordinates.
+  board[pieceToMoveCoordinates[0]][pieceToMoveCoordinates[1]] = null;
+  updateVisualBoard(oldCoordinates);
+  getSelectedPiece().selected = false;
+  changePlayer();
+};
 
 ////////////////////////////////////////////////////////////////////////////////
-//Piece Object and Methods//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
+var updateVisualBoard = function(oldCoordinates) {
+  var classType;
+  if (currentPlayer === 'B') {
+    classType = 'black-piece';
+  } else {
+    classType = 'white-piece';
+  }
 
-// var updateVisualBoard = function() {
-//   for (var i = 0; i < board.length; i++) {
-//     for (var j = 0; j < board[i].length; j++) {
-//       if (board[i][j] !== null) {
-//         if (board[i][j].team === "B") {
-//           var coordinate = '#' + board[i][j].coordinates.join('-');
-//           var newPiece = $('<div></div>').addClass('black-piece')
-//           $(coordinate).append(newPiece);
-//         }
-//       }
-//     }
-//   }
-// }
+  $(oldCoordinates).children().remove();
 
-// setPiece function adds a piece object depending on current player.
-// May or may not be used in the future.
-var setPiece = function(row, col, player) {
-  board[row - 1][col - 1] = player;
-  return board;
+  var pieceToMoveDiv = getSelectedPiece().getDivID();
+  var newPiece = $('<div></div>').addClass(classType);
+  $(pieceToMoveDiv).append(newPiece);
+
+  // getSelectedPiece().selected = false;
 };
 
 //Sets Up Black.
@@ -177,7 +160,7 @@ var setVisualBoard = function() {
       if (board[i][j] !== null) {
         if (board[i][j].team === "B") {
           var coordinate = '#' + board[i][j].coordinates.join('-');
-          var newPiece = $('<div></div>').addClass('black-piece')
+          var newPiece = $('<div></div>').addClass('black-piece');
           $(coordinate).append(newPiece);
         }
       }
@@ -201,7 +184,7 @@ var setVisualBoard = function() {
 // worked on quite a bit...
 var printBoard = function() {
   for (var i = 0; i < board.length; i++) {
-    var output = "";
+    var output = i + ":  ";
 
     for (var j = 0; j < board[i].length; j++) {
       if (board[i][j] === null) {
@@ -228,6 +211,14 @@ var clearBoard = function() {
   return board;
 };
 
+var clearVisualBoard = function() {
+  for (var i = 0; i < board.length; i++) {
+    for (var j = 0; j < board[i].length; j++) {
+      var coordinates = "#" + i + "-" + j;
+      $(coordinates).children().remove();
+    }
+  }
+};
 
 ////////// DOM INTERACTION ///////
 
@@ -236,16 +227,19 @@ var clearBoard = function() {
 
 // Event delegation/bubbling for all blocks inside the main board div.
 $(".board").on("click", ".square", function() {
-  var clicked = $(this);
-  if (getSelectedPiece().selected == true) {
-    var desiredMove = getClickedPiece(clicked);
-    console.log(desiredMove);
-    console.log("inside the if")
+  var clickedSquare = $(this); //this square was clicked
+  var clickedPiece = getClickedPiece(clickedSquare); //the piece inside the square
+  if (getSelectedPiece() == true && clickedSquare === null) { //try to move
+    var desiredMove = getClickedPiece(clickedSquare);
     getSelectedPiece().moveSelectedPiece(desiredMove);
+  } else if (getSelectedPiece() == true && clickedSquare !== null && clickedPiece.team === currentPlayer) { //switch selected
+    $(getSelectedPiece().getDivID()).children().removeClass('selected');
+    clickedPiece.setSelectedPiece();
+    $(clickedPiece.getDivID()).children().addClass('selected');
   } else {
-    clickedPiece = getClickedPiece(clicked);
-    clickedPiece.setSelectedPiece(); //method that sets piece selected as true //gets coordinates
     console.log(clickedPiece);
+    clickedPiece.setSelectedPiece(); //method that sets piece selected as true //gets coordinates
+    setVisualSelected();
   }
 });
 
@@ -253,13 +247,13 @@ $(".board").on("click", ".square", function() {
 // within the clicked div.
 var getClickedPiece = function(clicked) {
   var coordinates = clicked.attr('id').split('-');
-  if (board[coordinates[0]][coordinates[1]] === null){
+  if (board[coordinates[0]][coordinates[1]] === null) {
     // NEEDS TO CONVERT THE STRING COORDINATES TO NUMBERS.
-    coordinates.map(function(x) {
-      parseInt(x);
+    var coorInts = coordinates.map(function(x) {
+      return parseInt(x);
     });
-    console.log(coordinates);
-    return coordinates; //if it's null, return coordinates.
+
+    return coorInts; //if it's null, return coordinates.
   } else {
     var boardPiece = board[coordinates[0]][coordinates[1]];
   } //else, if there's a piece object there, return that.
@@ -276,7 +270,20 @@ var getSelectedPiece = function() {
   }
 
   return false;
-}
+};
+
+var changePlayer = function() {
+  if (currentPlayer === 'B') {
+    currentPlayer = 'W';
+  } else {
+    currentPlayer = 'B';
+  }
+};
+
+var setVisualSelected = function() {
+  var selectedPiece = $(getSelectedPiece().getDivID()).children();
+  selectedPiece.addClass('selected');
+};
 
 //Sets up the visual board on the button click.
 $('#set-board').on('click', function() {
@@ -284,3 +291,9 @@ $('#set-board').on('click', function() {
   setVisualBoard();
 });
 
+//Clear board button clears board array and Virtual Board.
+$('#clear-board').on('click', function() {
+  clearBoard();
+  currentPlayer = "B";
+  clearVisualBoard();
+});

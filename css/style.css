@@ -21,12 +21,12 @@ h1 {
   margin-bottom: 1px;
 }
 
-.board .square:nth-child(2n+0) {
+.board .square.dark {
   background-color: #ccc;
   margin-right: 1px;
 }
 
-.board .square:nth-child(2n+1) {
+.board .square.light {
   background-color: #ddd;
   margin-right: 1px;
 }
@@ -49,19 +49,31 @@ h1 {
   background-color: #eee;
 }
 
-#set-board {
+.options {
+  clear: both;
+  margin: 0 auto;
+}
+
+.option-buttons {
   text-align: center;
   width: 488px;
-  height: 50px;
-  margin: 60px auto;
+  height: 40px;
+  margin: 0 auto;
   border-radius: 5px;
   background-color: #aaa;
   border: 1px solid #eee;
 }
 
-#set-board h2 {
+.option-buttons h2 {
   font-weight: 300;
+  font-size: .95em;
   color: white;
   vertical-align: middle;
+}
+
+.selected {
+  -webkit-box-shadow: 0px 0px 10px 3px rgba(62,96,111,1);
+  -moz-box-shadow: 0px 0px 10px 3px rgba(62,96,111,1);
+  box-shadow: 0px 0px 10px 3px rgba(62,96,111,1);
 }
 
