@@ -39,15 +39,14 @@ Piece.prototype.getPossibleMoves = function() {
 
   if (this.king === true) {
     if (this.team === "B") { //check for possible black moves
-      possibleMoves.push([this.row + -1, this.col - 1]);
-      possibleMoves.push([this.row + -1, this.col + 1]);
+      possibleMoves.push([this.row - 1, this.col - 1]);
+      possibleMoves.push([this.row - 1, this.col + 1]);
 
     } else { //check for possible white moves
       possibleMoves.push([this.row + 1, this.col - 1]);
       possibleMoves.push([this.row + 1, this.col + 1]);
     }
   }
-
 
   //remove undefined values from possibleMoves array
   for (var i = 0; i < possibleMoves.length; i++) {
@@ -56,22 +55,50 @@ Piece.prototype.getPossibleMoves = function() {
     }
   }
 
+  if(this.team == "B") {
+    if(board[this.row + 1][this.col + 1] !== undefined) {
+      if (board[this.row + 1][this.col + 1] !== null && board[this.row + 1][this.col + 1].team !== currentPlayer) {
+        possibleMoves.push([this.row + 2, this.col + 2]);
+        console.log(possibleMoves);
+      }
+    }
+    if(board[this.row + 1][this.col - 1] !== undefined) {
+      if (board[this.row + 1][this.col - 1] !== null && board[this.row + 1][this.col - 1].team !== currentPlayer) {
+        possibleMoves.push([this.row + 2, this.col - 2]);
+        console.log(possibleMoves);
+      }
+    }
+  } else {
+    if(board[this.row - 1][this.col + 1] !== undefined) {
+      if (board[this.row - 1][this.col + 1] !== null && board[this.row - 1][this.col + 1].team !== currentPlayer) {
+        possibleMoves.push([this.row - 2, this.col + 2]);
+        console.log("made it");
+      }
+    }
+    if(board[this.row - 1][this.col - 1] !== undefined) {
+      if (board[this.row - 1][this.col - 1] !== null && board[this.row - 1][this.col - 1].team !== currentPlayer) {
+        possibleMoves.push([this.row - 2, this.col - 2]);
+        console.log("made it");
+      }
+    }
+  }
   //determines if there is an opponent piece in one of the possible moves,
   //and, if so, will remove that and allow the piece over it as a possible move.
 
-  for (var i = 0; i < possibleMoves.length; i++) {
-    console.log(board[possibleMoves[i][0]][possibleMoves[i][1]]);
-    if (typeof board[possibleMoves[i][0]][possibleMoves[i][1]] === 'object' && this.team == "B" && board[possibleMoves[i][0 + 1]][possibleMoves[i][1 - 1]] === null) {
-      possibleMoves.push([possibleMoves[i][0] + 1, possibleMoves[i][1] - 1]);
-    } else if (typeof board[possibleMoves[i][0]][possibleMoves[i][1]] === 'object' && this.team == "B" && board[possibleMoves[i][0 + 1]][possibleMoves[i][1 + 1]] === null) {
-      possibleMoves.push([possibleMoves[i][0] + 1, possibleMoves[i][1] + 1]);
-    } else if (typeof board[possibleMoves[i][0]][possibleMoves[i][1]] === 'object' && this.team == "W" && board[possibleMoves[i][0-1]][possibleMoves[i][1-1]] === null) {
-      possibleMoves.push([possibleMoves[i][0] - 1, possibleMoves[i][0] - 1]);
-    } else if (typeof board[possibleMoves[i][0]][possibleMoves[i][1]] === 'object' && this.team == "W" && board[possibleMoves[i][0-1]][possibleMoves[i][1+1]] === null) {
-      possibleMoves.push([possibleMoves[i][0] - 1, possibleMoves[i][1] + 1]);
-    }
-    // console.log(board[possibleMoves[1][0]][possibleMoves[1][1]]);
-  }
+  // for (var i = 0; i < possibleMoves.length; i++) {
+  //   console.log(board[possibleMoves[i][0]][possibleMoves[i][1]]);
+  //   if (typeof board[possibleMoves[i][0]][possibleMoves[i][1]] === 'object' && this.team == "B" && board[possibleMoves[i][0 + 1]][possibleMoves[i][1 - 1]] === null) {
+  //     possibleMoves.push([possibleMoves[i][0] + 1, possibleMoves[i][1] - 1]);
+  //   } else if (typeof board[possibleMoves[i][0]][possibleMoves[i][1]] === 'object' && this.team == "B" && board[possibleMoves[i][0 + 1]][possibleMoves[i][1 + 1]] === null) {
+  //     possibleMoves.push([possibleMoves[i][0] + 1, possibleMoves[i][1] + 1]);
+  //   } else if (typeof board[possibleMoves[i][0]][possibleMoves[i][1]] === 'object' && this.team == "W" && board[possibleMoves[i][0 - 1]][possibleMoves[i][1 - 1]] === null) {
+  //     possibleMoves.push([possibleMoves[i][0] - 1, possibleMoves[i][0] - 1]);
+  //   } else if (typeof board[possibleMoves[i][0]][possibleMoves[i][1]] === 'object' && this.team == "W" && board[possibleMoves[i][0 - 1]][possibleMoves[i][1 + 1]] === null) {
+  //     possibleMoves.push([possibleMoves[i][0] - 1, possibleMoves[i][1] + 1]);
+  //   }
+  //   // console.log(board[possibleMoves[1][0]][possibleMoves[1][1]]);
+  // }
+
   return possibleMoves;
 };
 
