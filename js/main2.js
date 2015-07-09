@@ -20,7 +20,7 @@ var board = [
 function Piece(team, row, col) {
   this.team = team;
   this.row = row;
-  this.column = column;
+  this.col= col;
   this.king = false; //no one is a king at start, when true, more possible moves.
   this.selected = false; //will change to true upon click.
 }
@@ -30,8 +30,8 @@ Piece.prototype.getPossibleMoves = function() {
   var possibleMoves = [];
   if (this.king === false) {
     if (this.team === "B") { //check for possible black moves
-      possibleMoves.push([this.row + 1, col - 1]);
-      possibleMoves.push([this.row + 1, col + 1]);
+      possibleMoves.push([this.row + 1, this.col - 1]);
+      possibleMoves.push([this.row + 1, this.col + 1]);
 
     } else { //check for possible white moves
       possibleMoves.push([this.row - 1, this.col - 1]);
@@ -41,25 +41,23 @@ Piece.prototype.getPossibleMoves = function() {
     //allow for moving backwards in both directions!
   }
 
-  console.log(possibleMoves[0]);
-
 //determiens if there is an opponent piece in one of the possible moves,
-//and, if so, will remove that and allow the piece over it as a possible move.
-  // if (typeof board[possibleMoves[0][0]][possibleMoves[0][1]] === 'object' && this.team == "B" && board[possibleMoves[0][0+1]][possibleMoves[0][1-1]] === null) {
-  //   possibleMoves.push([possibleMoves[0][0] + 1, possibleMoves[0][1] - 1]);
-  // }
+//and, if so, will remove that and alloƒw the piece over it as a possible move.
+  if (typeof board[possibleMoves[0][0]][possibleMoves[0][1]] === 'object' && this.team == "B" && board[possibleMoves[0][0+1]][possibleMoves[0][1-1]] === null) {
+    possibleMoves.push([possibleMoves[0][0] + 1, possibleMoves[0][1] - 1]);
+  }
 
-  // else if (typeof board[possibleMoves[1][0]][possibleMoves[1][1]] === 'object' && this.team == "B" && board[possibleMoves[1][0+1]][possibleMoves[1][1+1]] === null) {
-  //   possibleMoves.push([possibleMoves[1][0] + 1, possibleMoves[1][1] + 1]);
-  // }
+  else if (typeof board[possibleMoves[1][0]][possibleMoves[1][1]] === 'object' && this.team == "B" && board[possibleMoves[1][0+1]][possibleMoves[1][1+1]] === null) {
+    possibleMoves.push([possibleMoves[1][0] + 1, possibleMoves[1][1] + 1]);
+  }
 
-  // else if (typeof board[possibleMoves[0][0]][possibleMoves[0][1]] === 'object' && this.team == "W" && board[possibleMoves[0][0-1]][possibleMoves[0][1-1]] === null) {
-  //   possibleMoves.push([possibleMoves[0][0] - 1, possibleMoves[0][0] - 1]);
-  // }
+  else if (typeof board[possibleMoves[0][0]][possibleMoves[0][1]] === 'object' && this.team == "W" && board[possibleMoves[0][0-1]][possibleMoves[0][1-1]] === null) {
+    possibleMoves.push([possibleMoves[0][0] - 1, possibleMoves[0][0] - 1]);
+  }
 
-  // else if (typeof board[possibleMoves[1][0]][possibleMoves[1][1]] === 'object' && this.team == "W" && board[possibleMoves[1][0-1]][possibleMoves[1][1+1]] === null) {
-  //   possibleMoves.push([possibleMoves[1][0] - 1, possibleMoves[1][1] + 1]);
-  // }
+  else if (typeof board[possibleMoves[1][0]][possibleMoves[1][1]] === 'object' && this.team == "W" && board[possibleMoves[1][0-1]][possibleMoves[1][1+1]] === null) {
+    possibleMoves.push([possibleMoves[1][0] - 1, possibleMoves[1][1] + 1]);
+  }
 
   console.log(possibleMoves);
 
@@ -93,38 +91,42 @@ Piece.prototype.setSelectedPiece = function() {
   this.selected = true;
 };
 
-//Moves selected piece to the desired coordinates, assuming they match one of
-//the legal moves produced by getPossibleMoves().
-Piece.prototype.moveSelectedPiece = function(desiredCoordinates) {
-  var pieceToMove = getSelectedPiece(); //get currently selected piece
-  // console.log(pieceToMove);
-  var pieceToMoveCoordinates = pieceToMove.coordinates;
-  var possibleMoves = pieceToMove.getPossibleMoves();
-  // console.log(desiredCoordinates);
-  // console.log(pieceToMoveCoordinates + " piece to move coords");
-  // console.log(pieceToMove.getPossibleMoves()[0] + pieceToMove.getPossibleMoves()[1]);
-  // console.log(typeof desiredCoordinates[0] + desiredCoordinates[1] + " desired location coordinates");
-  if (desiredCoordinates[0] == possibleMoves[0][0] && desiredCoordinates[1] == possibleMoves[0][1]) {
-    acceptableMove = possibleMoves[0];
-  } else if (desiredCoordinates[0] == pieceToMove.getPossibleMoves()[1][0] && desiredCoordinates[1] == pieceToMove.getPossibleMoves()[1][1]) {
-    acceptableMove = possibleMoves[1];
-  } else if (typeof desiredCoordinates[0] === 'object' || typeof desiredCoordinates[1] === 'object') {
-    //then call attackOpponent method that will move to appropriate square and update Vis board.
-  } else {
-    alert("You can't move there.");
-    return;
-  }
-//////////////////SPLIT UP moveSelectedPiece into getDesiredMove and moveSelectedPiece methods.
-//////////////////This way, you can return acceptable move and act upon it in moveSelected Piece, below.
-
+Piece.prototype.moveSelectedPiece = function(acceptableMove) {
+  var pieceToMove = getSelectedPiece();
   var oldCoordinates = getSelectedPiece().getDivID();
-  pieceToMove.coordinates = acceptableMove; // change the selected piece coordinates to desired location.
+  pieceToMove.row = acceptableMove[0]; // change the selected piece coordinates to desired location.
+  pieceToMove.col = acceptableMove[1]; // change the selected piece coordinates to desired location.
   board[acceptableMove[0]][acceptableMove[1]] = pieceToMove; //move the object to new coordinates.
-  board[pieceToMoveCoordinates[0]][pieceToMoveCoordinates[1]] = null;
+  // board[oldCoordinates[0]][oldCoordinates[1]] = null;
   updateVisualBoard(oldCoordinates);
   getSelectedPiece().selected = false;
   changePlayer();
 };
+
+//Moves selected piece to the desired coordinates, assuming they match one of
+//the legal moves produced by getPossibleMoves().
+Piece.prototype.checkDesiredMove = function(desiredCoordinates) {
+  var selectedPiece = getSelectedPiece(); //get currently selected piece
+  var possibleMoves = selectedPiece.getPossibleMoves();
+  // console.log(desiredCoordinates);
+  // console.log(pieceToMoveCoordinates + " piece to move coords");
+  // console.log(pieceToMove.getPossibleMoves()[0] + pieceToMove.getPossibleMoves()[1]);
+  // console.log(typeof desiredCoordinates[0] + desiredCoordinates[1] + " desired location coordinates");
+  if (desiredCoordinates[0] === possibleMoves[0][0] && desiredCoordinates[1] === possibleMoves[0][1]) {
+    acceptableMove = possibleMoves[0];
+  } else if (desiredCoordinates[0] === pieceToMove.getPossibleMoves()[1][0] && desiredCoordinates[1] === pieceToMove.getPossibleMoves()[1][1]) {
+    acceptableMove = possibleMoves[1];
+  }
+  // else if (typeof desiredCoordinates[0] === 'object' || typeof desiredCoordinates[1] === 'object') {
+  //   //then call attackOpponent method that will move to appropriate square and update Vis board.
+  // }
+  else {
+    alert("You can't move there.");
+    return;
+  }
+
+  getSelectedPiece().moveSelectedPiece(acceptableMove);
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -195,7 +197,7 @@ var setVisualBoard = function() {
     for (var j = 0; j < board[i].length; j++) {
       if (board[i][j] !== null) {
         if (board[i][j].team === "B") {
-          var coordinate = '#' + board[i][j].coordinates.join('-');
+          var coordinate = board[i][j].getDivID();
           var newPiece = $('<div></div>').addClass('black-piece');
           $(coordinate).append(newPiece);
         }
@@ -207,7 +209,7 @@ var setVisualBoard = function() {
     for (var j = 0; j < board[i].length; j++) {
       if (board[i][j] !== null) {
         if (board[i][j].team === "W") {
-          var coordinate = '#' + board[i][j].coordinates.join('-');
+          var coordinate = board[i][j].getDivID();
           var newPiece = $('<div></div>').addClass('white-piece');
           $(coordinate).append(newPiece);
         }
@@ -272,7 +274,7 @@ $(".board").on("click", ".square", function() {
   } else { //try to move
     if (getSelectedPiece().team === currentPlayer) {
       var desiredMove = getClicked(clickedSquare);
-      getSelectedPiece().moveSelectedPiece(desiredMove);
+      getSelectedPiece().checkDesiredMove(desiredMove);
     } else {
       alert("It's not your turn!");
     }
