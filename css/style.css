@@ -32,6 +32,7 @@ h1 {
 }
 
 .black-piece {
+  cursor: pointer;
   width: 60%;
   height: 60%;
   margin: 20% auto;
@@ -41,6 +42,7 @@ h1 {
 }
 
 .white-piece {
+  cursor: pointer;
   width: 60%;
   height: 60%;
   margin: 20% auto;

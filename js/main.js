@@ -41,18 +41,16 @@ Piece.prototype.getPossibleMoves = function() {
 };
 
 //gets the coordinates for a piece and converts it to a string with the div IDname.
+//Used for DOM Manipulation.
 Piece.prototype.getDivID = function() {
   return '#' + this.coordinates.join('-');
 };
 
-Piece.prototype.checkForOpponent = function() {
-  // var potentialOpponent = board[possibleMove[0]][possibleMove[1]];
-  // if (potentialOpponent.team !== currentPlayer) {
-  //remove potentialOpponent, update score, skip the selected
-  //piece to appropriate square.
+Piece.prototype.attackOpponent(opponentLocation) = function() {
+
 };
 
-// Sets the piece object to selected as true and sets seleceted as false
+// Sets the piece object to selected as true and sets selected as false
 // for all other pieces.
 Piece.prototype.setSelectedPiece = function() {
   if (this.selected !== true) {
@@ -68,20 +66,25 @@ Piece.prototype.setSelectedPiece = function() {
 };
 
 Piece.prototype.moveSelectedPiece = function(desiredCoordinates) {
-  pieceToMove = getSelectedPiece(); //get currently selected piece
+  var pieceToMove = getSelectedPiece(); //get currently selected piece
   // console.log(pieceToMove);
-  pieceToMoveCoordinates = pieceToMove.coordinates;
-  // console.log(pieceToMoveCoordinates + " piece to move coords");
-  // console.log(pieceToMove.getPossibleMoves()[0] + " & " + pieceToMove.getPossibleMoves()[1] + " possible moves");
-  // console.log(coordinates + " desire location coordinates");
-  if (desiredCoordinates[0] == pieceToMove.getPossibleMoves()[0][0] && desiredCoordinates[1] == pieceToMove.getPossibleMoves()[0][1]) {
-    acceptableMove = pieceToMove.getPossibleMoves()[0];
+  var pieceToMoveCoordinates = pieceToMove.coordinates;
+  var possibleMoves = pieceToMove.getPossibleMoves();
+  console.log(desiredCoordinates);
+  console.log(pieceToMoveCoordinates + " piece to move coords");
+  console.log(pieceToMove.getPossibleMoves()[0] + " & " + pieceToMove.getPossibleMoves()[1] + " possible moves");
+  console.log(typeof desiredCoordinates[0] + desiredCoordinates[1] + " desired location coordinates");
+  if (desiredCoordinates[0] == possibleMoves[0][0] && desiredCoordinates[1] == possibleMoves[0][1]) {
+    acceptableMove = possibleMoves[0];
   } else if (desiredCoordinates[0] == pieceToMove.getPossibleMoves()[1][0] && desiredCoordinates[1] == pieceToMove.getPossibleMoves()[1][1]) {
-    acceptableMove = pieceToMove.getPossibleMoves()[1];
+    acceptableMove = possibleMoves[1];
+  } else if (typeof desiredCoordinates[0] === 'undefined' || typeof desiredCoordinates[1] === 'undefined') {
+    // getSelectedPiece().attackOpponent();
   } else {
     alert("You can't move there.");
     return;
   }
+
 
   var oldCoordinates = getSelectedPiece().getDivID();
   pieceToMove.coordinates = acceptableMove; // change the selected piece coordinates to desired location.
@@ -228,27 +231,34 @@ var clearVisualBoard = function() {
 // Event delegation/bubbling for all blocks inside the main board div.
 $(".board").on("click", ".square", function() {
   var clickedSquare = $(this); //this square was clicked
-  var clickedPiece = getClickedPiece(clickedSquare); //the piece inside the square
-  if (getSelectedPiece() == true && clickedSquare === null) { //try to move
-    var desiredMove = getClickedPiece(clickedSquare);
-    getSelectedPiece().moveSelectedPiece(desiredMove);
-  } else if (getSelectedPiece() == true && clickedSquare !== null && clickedPiece.team === currentPlayer) { //switch selected
-    $(getSelectedPiece().getDivID()).children().removeClass('selected');
-    clickedPiece.setSelectedPiece();
-    $(clickedPiece.getDivID()).children().addClass('selected');
-  } else {
-    console.log(clickedPiece);
+  console.log(clickedSquare);
+  var clickedPiece = getClicked(clickedSquare); //the piece inside the square
+  if (getSelectedPiece() === false && clickedPiece.team === currentPlayer) { //set as selected
     clickedPiece.setSelectedPiece(); //method that sets piece selected as true //gets coordinates
-    setVisualSelected();
+    console.log(clickedPiece);
+    // need to finish: setVisualSelected();
+  } else if (getSelectedPiece().selected == true && getClicked(clickedSquare) !== null && clickedPiece.team === currentPlayer) { //switch selected
+    //to be done: set visual selected
+    clickedPiece.setSelectedPiece();
+  } else { //try to move
+    if (getSelectedPiece().team === currentPlayer) {
+      console.log("in here")
+      // console.log(clickedSquare);
+      var desiredMove = getClicked(clickedSquare);
+      // / console.log(desiredMove);
+      getSelectedPiece().moveSelectedPiece(desiredMove);
+    } else {
+      alert("It's not your turn!");
+    }
   }
 });
 
 // registers where the player clicked and returns the Piece object contained
-// within the clicked div.
-var getClickedPiece = function(clicked) {
+// within the clicked div. otherwise, returns coordinates of the null board location.
+var getClicked = function(clicked) {
   var coordinates = clicked.attr('id').split('-');
   if (board[coordinates[0]][coordinates[1]] === null) {
-    // NEEDS TO CONVERT THE STRING COORDINATES TO NUMBERS.
+
     var coorInts = coordinates.map(function(x) {
       return parseInt(x);
     });
@@ -281,6 +291,14 @@ var changePlayer = function() {
 };
 
 var setVisualSelected = function() {
+  //remove prior selected visual shadow
+  for (var i = 0; i < board.length; i++) {
+    for (var j = 0; j < board[i].length; j++) {
+      if (board[i][j] !== null) {
+        board[i][j].selected = false;
+      }
+    }
+  }
   var selectedPiece = $(getSelectedPiece().getDivID()).children();
   selectedPiece.addClass('selected');
 };
