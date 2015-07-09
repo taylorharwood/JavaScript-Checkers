@@ -65,19 +65,14 @@ Piece.prototype.getPossibleMoves = function() {
       possibleMoves.push([possibleMoves[i][0] + 1, possibleMoves[i][1] - 1]);
     } else if (typeof board[possibleMoves[i][0]][possibleMoves[i][1]] === 'object' && this.team == "B" && board[possibleMoves[i][0 + 1]][possibleMoves[i][1 + 1]] === null) {
       possibleMoves.push([possibleMoves[i][0] + 1, possibleMoves[i][1] + 1]);
+    } else if (typeof board[possibleMoves[i][0]][possibleMoves[i][1]] === 'object' && this.team == "W" && board[possibleMoves[i][0-1]][possibleMoves[i][1-1]] === null) {
+      possibleMoves.push([possibleMoves[i][0] - 1, possibleMoves[i][0] - 1]);
+    } else if (typeof board[possibleMoves[i][0]][possibleMoves[i][1]] === 'object' && this.team == "W" && board[possibleMoves[i][0-1]][possibleMoves[i][1+1]] === null) {
+      possibleMoves.push([possibleMoves[i][0] - 1, possibleMoves[i][1] + 1]);
     }
-
-    // else if (typeof board[possibleMoves[i][0]][possibleMoves[i][1]] === 'object' && this.team == "W" && board[possibleMoves[i][0-1]][possibleMoves[i][1-1]] === null) {
-    //   possibleMoves.push([possibleMoves[i][0] - 1, possibleMoves[i][0] - 1]);
-    // }
-
-    // else if (typeof board[possibleMoves[i][0]][possibleMoves[i][1]] === 'object' && this.team == "W" && board[possibleMoves[i][0-1]][possibleMoves[i][1+1]] === null) {
-    //   possibleMoves.push([possibleMoves[i][0] - 1, possibleMoves[i][1] + 1]);
-    // }
-
     // console.log(board[possibleMoves[1][0]][possibleMoves[1][1]]);
-    return possibleMoves;
   }
+  return possibleMoves;
 };
 
 //gets the coordinates for a piece and converts it to a string with the div IDname.
