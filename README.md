@@ -21,7 +21,7 @@ To install this game and play it, simply download the files and open up the HTML
 
 If you'd like to download and alter the source code, all of the HTML is contained in `index.html`, all of the CSS is contained in `style.css`, and all of the Javascript and jQuery is contained in the `main.js` file.
 
-Unsolved Problems/Planned Features:
+###Unsolved Problems/Planned Features:
 - The game is not fully functional. The logic for determining piece moves is rather refined, but "capturing" pieces has not yet been fully implemented even though skipping over pieces is possible. The game does not keep track of score. The game does not account for "chain" attacks. The game does not account for king pieces. Over the next few weeks, I'd like to refactor my code and finish a fully working copy.
 
 
